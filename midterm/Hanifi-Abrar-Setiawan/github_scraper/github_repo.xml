@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<repositories>
+    <repository>
+        <url>https://github.com/HanifiSetiawan/ACP-Group-06</url>
+        <name>ACP-Group-06</name>
+        <full_name>HanifiSetiawan/ACP-Group-06</full_name>
+        <about>None</about>
+        <last_updated>2025-04-11T11:52:28Z</last_updated>
+        <stars>0</stars>
+        <forks>0</forks>
+        <watchers>0</watchers>
+        <open_issues>0</open_issues>
+        <license>None</license>
+        <is_private>False</is_private>
+        <size_kb>0</size_kb>
+        <default_branch>main</default_branch>
+        <languages>None</languages>
+        <language_bytes></language_bytes>
+        <total_commits>5</total_commits>
+        <last_commit>1183784017dcf199342eb7524b12ff5d18081d44</last_commit>
+        <last_commit_message>Create README.md</last_commit_message>
+        <last_commit_date>2025-04-11T11:52:24Z</last_commit_date>
+    </repository>
+</repositories>
