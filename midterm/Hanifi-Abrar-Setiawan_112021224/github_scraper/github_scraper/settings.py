@@ -27,4 +27,4 @@ ITEM_PIPELINES = {
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 
 # GitHub API settings (optional)
-GITHUB_TOKEN = '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'  # Set your token here if you have one
+#  GITHUB_TOKEN = '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'  # Set your token here if you have one
