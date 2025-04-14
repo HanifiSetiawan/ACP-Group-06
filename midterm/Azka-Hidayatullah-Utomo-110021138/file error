@@ -1,0 +1,49 @@
+pip install scrapy
+scrapy startproject github_scraper
+cd github_scraper
+import scrapy
+
+class GithubSpider(scrapy.Spider):
+    name = 'github'
+    allowed_domains = ['github.com']
+    start_urls = ['https://github.com/Azkahu?tab=repositories']
+
+    def parse(self, response):
+        repos = response.css('li[itemprop="owns"]')
+        for repo in repos:
+            repo_url = response.urljoin(repo.css('a[itemprop="name codeRepository"]::attr(href)').get())
+            about = repo.css('p[itemprop="description"]::text').get()
+            updated = repo.css('relative-time::attr(datetime)').get()
+            repo_name = repo.css('a[itemprop="name codeRepository"]::text').get().strip()
+
+            # Kalau about kosong, pakai nama repo sebagai pengganti
+            if not about:
+                about = repo_name
+
+            yield scrapy.Request(repo_url, callback=self.parse_repo, meta={
+                'repo_url': repo_url,
+                'about': about,
+                'updated': updated,
+                'repo_name': repo_name
+            })
+
+    def parse_repo(self, response):
+        # Cek apakah repositori kosong
+        empty = response.css('div.Box-body p::text').re(r'.*empty.*')
+        is_empty = any('empty' in line.lower() for line in empty)
+
+        if is_empty:
+            languages = None
+            commits = None
+        else:
+            languages = response.css('span.color-fg-default.text-bold.mr-1::text').getall()
+            commits = response.css('li.Commits div span.d-none::text').re_first(r'\d+')
+
+        yield {
+            'url': response.meta['repo_url'],
+            'about': response.meta['about'],
+            'last_updated': response.meta['updated'],
+            'languages': languages,
+            'number_of_commits': commits
+        }
+scrapy crawl github -o repos.xml
