@@ -16,7 +16,10 @@ class GithubAccountSpider(scrapy.Spider):
         self.settings = get_project_settings()
         
     def start_requests(self):
-        headers = {'Accept': 'application/vnd.github.v3+json'}
+        headers = {
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
         if self.settings.get('GITHUB_TOKEN'):
             headers['Authorization'] = f'token {self.settings["GITHUB_TOKEN"]}'
             
@@ -36,17 +39,19 @@ class GithubAccountSpider(scrapy.Spider):
                 'url': repo['html_url'],
                 'title': repo['name'],
                 'about': repo['description'],
+                'primary_language': repo['language'],  # Keep the primary language
+                'languages': {},  # Initialize empty dict for all languages
                 'last_updated': repo['updated_at'],
-                'total_commits': 0,  # Initialize to 0
+                'total_commits': 0,
                 'last_commit': None,
                 'last_commit_date': None
             }
             
-            # Get accurate commit count using contributors API
-            contributors_url = f"{self.API_BASE}/repos/{self.username}/{repo['name']}/contributors?anon=1"
+            # First get all languages used in the repo
+            languages_url = f"{self.API_BASE}/repos/{self.username}/{repo['name']}/languages"
             yield scrapy.Request(
-                contributors_url,
-                callback=self.parse_contributors,
+                languages_url,
+                callback=self.parse_languages,
                 headers=headers,
                 meta={'item': item}
             )
@@ -59,6 +64,20 @@ class GithubAccountSpider(scrapy.Spider):
                           for link in links.split(', ') 
                           if 'rel="next"' in link][0]
                 yield scrapy.Request(next_url, callback=self.parse_repo_list, headers=headers)
+    
+    def parse_languages(self, response):
+        item = response.meta['item']
+        languages_data = json.loads(response.text)
+        item['languages'] = languages_data  # This will be a dict like {'Python': 12345, 'JavaScript': 6789}
+        
+        # Now get contributor data
+        contributors_url = f"{self.API_BASE}/repos/{self.username}/{item['title']}/contributors?anon=1"
+        yield scrapy.Request(
+            contributors_url,
+            callback=self.parse_contributors,
+            headers=response.request.headers,
+            meta={'item': item}
+        )
     
     def parse_contributors(self, response):
         item = response.meta['item']
