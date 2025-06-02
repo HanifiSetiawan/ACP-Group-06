@@ -28,6 +28,10 @@ class XboxSpider(scrapy.Spider):
                 break
 
         html = driver.page_source
+
+        with open("xbox_debug.html", "w", encoding="utf-8") as f:
+            f.write(html)
+
         driver.quit()
         yield scrapy.http.HtmlResponse(url=self.start_urls[0], body=html, encoding='utf-8')
 

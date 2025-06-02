@@ -25,7 +25,7 @@ class SteamStoreSeleniumSpider(scrapy.Spider):
         )
 
         last_count = 0
-        for _ in range(10):
+        for _ in range(5):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)
             games = driver.find_elements(By.CSS_SELECTOR, "a.search_result_row")
@@ -35,7 +35,8 @@ class SteamStoreSeleniumSpider(scrapy.Spider):
                 break
 
         html = driver.page_source
-        print(html[:2000])
+        with open("steam_debug.html", "w", encoding="utf-8") as f:
+            f.write(html)
         driver.quit()
         yield scrapy.http.HtmlResponse(url=self.start_urls[0], body=html, encoding='utf-8')
 
@@ -43,10 +44,15 @@ class SteamStoreSeleniumSpider(scrapy.Spider):
         count = 0
         for row in response.css('a.search_result_row'):
             name = row.css('span.title::text').get()
+            # Try to get discount info
+            discount = row.css('div.discount_pct::text').get()
+            original_price = row.css('div.discount_original_price::text').get()
             final_price = row.css('div.discount_final_price::text').get()
-            discount = row.css('div.search_discount_block .discount_pct::text').get()
-            original_price = row.css('div.search_discount_block .discount_original_price::text').get()
-
+            # If not discounted, get price from search_price
+            if not final_price:
+                final_price = row.css('div.search_price::text').get()
+                if final_price:
+                    final_price = final_price.strip()
             if name and final_price:
                 yield {
                     "name": name.strip(),
@@ -54,9 +60,8 @@ class SteamStoreSeleniumSpider(scrapy.Spider):
                     "original_price": original_price.strip() if original_price else None,
                     "final_price": final_price.strip(),
                 }
-            count += 1
-            if count >= 100:
-                break
+        count += 1
+        # Removed 'break' as it is not valid outside a loop
 
 
        
