@@ -4,7 +4,7 @@ class SteamStoreSpider(scrapy.Spider):
     name = "steamstore"
     allowed_domains = ["store.steampowered.com"]
     start_urls = [
-        "https://store.steampowered.com/search/?specials=1"
+        "https://store.steampowered.com/search/?filter=topsellers"
     ]
 
     def parse(self, response):
