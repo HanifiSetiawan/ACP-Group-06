@@ -7,10 +7,20 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+PLAYWRIGHT_LAUNCH_OPTIONS = {
+    "headless": False,
+} 
+
+
 BOT_NAME = "game_comparison"
 
 SPIDER_MODULES = ["game_comparison.spiders"]
 NEWSPIDER_MODULE = "game_comparison.spiders"
+
+DOWNLOAD_HANDLERS = {
+        "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+        "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    }
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -18,6 +28,8 @@ NEWSPIDER_MODULE = "game_comparison.spiders"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+PLAYWRIGHT_BROWSER_TYPE = "chromium"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
