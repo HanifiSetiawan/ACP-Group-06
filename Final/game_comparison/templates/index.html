@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-white">
+  <div class="container my-4 p-4 rounded">
+    <h1 class="mb-4">Game Comparison</h1>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="steam-tab" data-bs-toggle="tab" data-bs-target="#steam" type="button" role="tab">Steam</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="xbox-tab" data-bs-toggle="tab" data-bs-target="#xbox" type="button" role="tab">Xbox</button>
+      </li>
+    </ul>
+    <div class="tab-content mt-3">
+      <div class="tab-pane fade show active" id="steam" role="tabpanel">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Discount</th>
+                    <th>Original Price</th>
+                    <th>Final Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for game in steam_games %}
+                <tr>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.discount }}</td>
+                    <td>{{ game.original_price }}</td>
+                    <td>{{ game.final_price }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="xbox" role="tabpanel">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Discount</th>
+                    <th>Original Price</th>
+                    <th>Final Price</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for game in xbox_games %}
+                <tr>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.discount }}</td>
+                    <td>{{ game.original_price }}</td>
+                    <td>{{ game.final_price }}</td>
+                    <td><a href="{{ game.url }}" target="_blank">Link</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
