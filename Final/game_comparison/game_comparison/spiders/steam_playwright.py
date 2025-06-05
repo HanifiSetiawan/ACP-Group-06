@@ -14,7 +14,7 @@ class SteamPlaywrightSpider(scrapy.Spider):
                 "playwright": True,
                 "playwright_page_methods": [
                     PageMethod("evaluate", """
-                        let scrolls = 5;
+                        let scrolls = 9;
                         async function scrollDown(i) {
                             if (i < scrolls) {
                                 window.scrollTo(0, document.body.scrollHeight);
