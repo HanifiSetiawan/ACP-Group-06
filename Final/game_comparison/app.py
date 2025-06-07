@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    steam_games = load_games_from_xml('steam_output_playwright(Final_Output).xml')
+    steam_games = load_games_from_xml('steam_output_playwright.xml')
     xbox_games = load_games_from_xml('xbox_output.xml')
 
     # Merge by name (case-insensitive)
