@@ -12,6 +12,8 @@ PLAYWRIGHT_LAUNCH_OPTIONS = {
 } 
 
 
+
+
 BOT_NAME = "game_comparison"
 
 SPIDER_MODULES = ["game_comparison.spiders"]
