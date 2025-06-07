@@ -12,6 +12,9 @@ class XboxDealsSpider(scrapy.Spider):
             discount = card.css('div.game-collection-item-discounts span.game-collection-item-discount-bonus::text').get()
             original_price = card.css('span.game-collection-item-price.strikethrough::text').get()
             final_price = card.css('span[itemprop="price"]::attr(content)').get()
+            image_url = card.css('div.game-collection-item-image-placeholder img::attr(src)').get()
+            if not image_url:
+                image_url = card.css('div.game-collection-item-image-placeholder img::attr(data-src)').get()
             if not final_price:
                 # fallback: sometimes price is visible
                 final_price = card.css('span.game-collection-item-price::text').get()
@@ -21,6 +24,7 @@ class XboxDealsSpider(scrapy.Spider):
                 "original_price": original_price.strip() if original_price else None,
                 "final_price": final_price.strip() if final_price else None,
                 "url": response.urljoin(link) if link else None,
+                "image_url": image_url.strip() if image_url else None
             }
 
         # Pagination: follow next page if exists

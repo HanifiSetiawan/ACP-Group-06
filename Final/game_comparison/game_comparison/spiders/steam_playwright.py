@@ -34,6 +34,7 @@ class SteamPlaywrightSpider(scrapy.Spider):
             discount = row.css('div.discount_pct::text').get()
             original_price = row.css('div.discount_original_price::text').get()
             final_price = row.css('div.discount_final_price::text').get()
+            image_url = row.css('div.search_capsule img::attr(src)').get()
             if not final_price:
                 final_price = row.css('div.search_price::text').get()
                 if final_price:
@@ -44,4 +45,5 @@ class SteamPlaywrightSpider(scrapy.Spider):
                     "discount": discount.strip() if discount else None,
                     "original_price": original_price.strip() if original_price else None,
                     "final_price": final_price.strip(),
+                    'image_url': image_url.strip() if image_url else None
                 }

@@ -25,6 +25,9 @@ class PSStoreSpider(scrapy.Spider):
             discount = game.css("span.game-collection-item-discount::text").get()
             original_price = game.css("span.game-collection-item-price strikethrough::text").get()
             final_price = game.css("span.game-collection-item-price-discount::text").get()
+            image_url = game.css('div.game-collection-item-image-placeholder img::attr(src)').get()
+            if not image_url:
+                image_url = game.css('div.game-collection-item-image-placeholder img::attr(data-src)').get()
             if not final_price:
                 final_price = game.css("span.game-collection-item-price ::text").get()
             yield {
@@ -33,6 +36,7 @@ class PSStoreSpider(scrapy.Spider):
                 "discount": discount.strip() if discount else None,
                 "original_price": original_price.strip() if original_price else None,
                 "final_price": final_price.strip(),
+                "image_url": image_url.strip() if image_url else None,
             }
         
         #pagination: follow next page if exists

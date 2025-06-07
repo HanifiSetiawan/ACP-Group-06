@@ -8,9 +8,16 @@
 <body class="bg-dark text-white">
   <div class="container my-4 p-4 rounded">
     <h1 class="mb-4">Game Comparison</h1>
+    <form class="mb-4" method="get" action="{{ url_for('index') }}">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search game name..." name="q" value="{{ query|default('') }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
     <table class="table table-striped table-dark">
         <thead>
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Steam Price</th>
                 <th>Xbox Price</th>
@@ -20,7 +27,14 @@
         <tbody>
         {% for game in merged_games %}
             <tr>
-                <td>{{ game.name }}</td>
+                <td>
+                    {% if game.image %}
+                        <img src="{{ game.image }}" alt="{{ game.name }}" style="width:200px; height:120px;">
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="text-lg">{{ game.name }}</td>
                 <td>{{ game.steam_price or '-' }}</td>
                 <td>{{ game.xbox_price or '-' }}</td>
                 <td>{{ game.ps_price or '-' }}</td>
@@ -28,6 +42,21 @@
         {% endfor %}
         </tbody>
     </table>
+     <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('index', page=page-1) }}">Previous</a>
+                </li>
+                {% for p in range(1, pages+1) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('index', page=p) }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+                <li class="page-item {% if page == pages %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('index', page=page+1) }}">Next</a>
+                </li>
+            </ul>
+        </nav>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
