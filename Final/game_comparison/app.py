@@ -16,6 +16,7 @@ app = Flask(__name__)
 def index():
     steam_games = load_games_from_xml('steam_output_playwright.xml')
     xbox_games = load_games_from_xml('xbox_output.xml')
+    ps_games = load_games_from_xml('ps_output.xml')
 
     # Merge by name (case-insensitive)
     merged = {}
@@ -24,7 +25,8 @@ def index():
         merged[name] = {
             "name": game['name'],
             "steam_price": game['final_price'],
-            "xbox_price": None
+            "xbox_price": None,
+            "ps_price": None
         }
     for game in xbox_games:
         name = game['name'].strip().lower()
@@ -34,7 +36,19 @@ def index():
             merged[name] = {
                 "name": game['name'],
                 "steam_price": None,
-                "xbox_price": game['final_price']
+                "xbox_price": game['final_price'],
+                "ps_price": None
+            }
+    for game in ps_games:
+        name = game['name'].strip().lower()
+        if name in merged:
+            merged[name]["ps_price"] = game['final_price']
+        else:
+            merged[name] = {
+                "name": game['name'],
+                "steam_price": None,
+                "xbox_price": None,
+                "ps_price": game['final_price']
             }
     merged_games = list(merged.values())
 
