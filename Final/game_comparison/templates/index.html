@@ -22,6 +22,7 @@
                 <th>Steam Price</th>
                 <th>Xbox Price</th>
                 <th>PS Price</th>
+                <th>Epic Price</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +39,7 @@
                 <td>{{ game.steam_price or '-' }}</td>
                 <td>{{ game.xbox_price or '-' }}</td>
                 <td>{{ game.ps_price or '-' }}</td>
+                <td>{{ game.epic_price or '-' }}</td>
             </tr>
         {% endfor %}
         </tbody>
