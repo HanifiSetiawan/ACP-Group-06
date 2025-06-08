@@ -50,10 +50,34 @@
               {% endif %}
             </td>
             <td class="text-lg">{{ game.name }}</td>
-            <td>{{ game.steam_price or '-' }}</td>
-            <td>{{ game.xbox_price or '-' }}</td>
-            <td>{{ game.ps_price or '-' }}</td>
-            <td>{{ game.epic_price or '-' }}</td>
+            <td>
+              {% if game.steam_price and game.steam_link %}
+                <a href="{{ game.steam_link }}" target="_blank" class="text-decoration-none text-info">{{ game.steam_price }}</a>
+              {% else %}
+                {{ game.steam_price or '-' }}
+              {% endif %}
+            </td>
+            <td>
+              {% if game.xbox_price and game.xbox_link %}
+                <a href="{{ game.xbox_link }}" target="_blank" class="text-decoration-none text-success">{{ game.xbox_price }}</a>
+              {% else %}
+                {{ game.xbox_price or '-' }}
+              {% endif %}
+            </td>
+            <td>
+              {% if game.ps_price and game.ps_link %}
+                <a href="{{ game.ps_link }}" target="_blank" class="text-decoration-none text-primary">{{ game.ps_price }}</a>
+              {% else %}
+                {{ game.ps_price or '-' }}
+              {% endif %}
+            </td>
+            <td>
+              {% if game.epic_price and game.epic_link %}
+                <a href="{{ game.epic_link }}" target="_blank" class="text-decoration-none text-warning">{{ game.epic_price }}</a>
+              {% else %}
+                {{ game.epic_price or '-' }}
+              {% endif %}
+            </td>
           </tr>
           <tr class="spacer"><td colspan="100"></td></tr>
         {% endfor %}

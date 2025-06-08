@@ -24,7 +24,7 @@ def usd_to_ntd(price_str, rate=30):
 
 @app.route("/")
 def index():
-    steam_games = load_games_from_xml('steam_output_playwright_img.xml')
+    steam_games = load_games_from_xml('steam_output_img_link.xml')
     xbox_games = load_games_from_xml('xbox_output_img.xml')
     ps_games = load_games_from_xml('ps_output_img.xml')
     epic_games = load_games_from_xml('epic_output.xml')
@@ -37,51 +37,70 @@ def index():
             "image": game.get('image_url', None),
             "name": game['name'],
             "steam_price": game['final_price'],
+            "steam_link": game.get('link', None),
             "xbox_price": None,
+            "xbox_link": None,
             "ps_price": None,
-            "epic_price": None
+            "ps_link": None,
+            "epic_price": None,
+            "epic_link": None
         }
     for game in xbox_games:
         name = game['name'].strip().lower()
         ntd_price = usd_to_ntd(game['final_price'])
         if name in merged:
             merged[name]["xbox_price"] = ntd_price
+            merged[name]["xbox_link"] = game.get('url', None)
         else:
             merged[name] = {
                 "image": game.get('image_url', None),
                 "name": game['name'],
                 "steam_price": None,
+                "steam_link": None,
                 "xbox_price": ntd_price,
+                "xbox_link": game.get('url', None),
                 "ps_price": None,
-                "epic_price": None
+                "ps_link": None,
+                "epic_price": None,
+                "epic_link": None
             }
     for game in ps_games:
         name = game['name'].strip().lower()
         ntd_price = usd_to_ntd(game['final_price'])
         if name in merged:
             merged[name]["ps_price"] = ntd_price
+            merged[name]["ps_link"] = game.get('link', None)
         else:
             merged[name] = {
                 "image": game.get('image_url', None),
                 "name": game['name'],
                 "steam_price": None,
+                "steam_link": None,
                 "xbox_price": None,
+                "xbox_link": None,
                 "ps_price": ntd_price,
-                "epic_price": None
+                "ps_link": game.get('link', None),
+                "epic_price": None,
+                "epic_link": None
             }
     for game in epic_games:
         name = game['name'].strip().lower()
         ntd_price = usd_to_ntd(game['final_price'])
         if name in merged:
             merged[name]["epic_price"] = ntd_price
+            merged[name]["epic_link"] = game.get('link', None)
         else:
             merged[name] = {
                 "image": game.get('image_url', None),
                 "name": game['name'],
                 "steam_price": None,
+                "steam_link": None,
                 "xbox_price": None,
+                "xbox_link": None,
                 "ps_price": None,
-                "epic_price": ntd_price
+                "ps_link": None,
+                "epic_price": ntd_price,
+                "epic_link": game.get('link', None)
             }
     merged_games = list(merged.values())
     # Sort by number of non-None prices (descending)

@@ -14,7 +14,7 @@ class SteamPlaywrightSpider(scrapy.Spider):
                 "playwright": True,
                 "playwright_page_methods": [
                     PageMethod("evaluate", """
-                        let scrolls = 9;
+                        let scrolls = 19;
                         async function scrollDown(i) {
                             if (i < scrolls) {
                                 window.scrollTo(0, document.body.scrollHeight);
@@ -35,6 +35,7 @@ class SteamPlaywrightSpider(scrapy.Spider):
             original_price = row.css('div.discount_original_price::text').get()
             final_price = row.css('div.discount_final_price::text').get()
             image_url = row.css('div.search_capsule img::attr(src)').get()
+            game_link = row.attrib.get('href')  # Get the href attribute from the anchor
             if not final_price:
                 final_price = row.css('div.search_price::text').get()
                 if final_price:
@@ -45,5 +46,6 @@ class SteamPlaywrightSpider(scrapy.Spider):
                     "discount": discount.strip() if discount else None,
                     "original_price": original_price.strip() if original_price else None,
                     "final_price": final_price.strip(),
-                    'image_url': image_url.strip() if image_url else None
+                    'image_url': image_url.strip() if image_url else None,
+                    'link': game_link.strip() if game_link else None
                 }
