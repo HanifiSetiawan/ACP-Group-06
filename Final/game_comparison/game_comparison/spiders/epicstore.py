@@ -24,9 +24,9 @@ class EpicstoreSpider(scrapy.Spider):
             link = game.css("::attr(href)").get()
             original_price = game.css("span.text-lg.font-medium.text-muted-foreground.line-through::text").get()
             final_price = game.css("span.text-lg.font-semibold.text-badge::text").get()
-            image_url = game.css("div.h-full.w-24.flex-shrink-0.flex.flex-col.justify-center.items-center img::attr(src)").get()
+            image_url = game.css("img.object-cover::attr(src)").get()
             if not image_url:
-                image_url = game.css("div.h-full.w-24.flex-shrink-0.flex.flex-col.justify-center.items-center img::attr(data-src)").get()
+                image_url = game.css("img.object-cover::attr(data-src)").get()
             if not final_price:
                 final_price = game.css("span.text-lg.font-semibold::text").get()
             yield {
@@ -37,3 +37,5 @@ class EpicstoreSpider(scrapy.Spider):
                 "final_price": final_price.strip() if final_price else None,
                 "image_url": image_url.strip() if image_url else None
             }
+
+

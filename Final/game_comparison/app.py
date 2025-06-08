@@ -84,27 +84,43 @@ def index():
                 "epic_price": ntd_price
             }
     merged_games = list(merged.values())
-    merged_games.sort(key=lambda x: x['name'])  # Optional: sort by name
+    # Sort by number of non-None prices (descending)
+    def price_count(game):
+        return sum([
+            game.get("steam_price") is not None,
+            game.get("xbox_price") is not None,
+            game.get("ps_price") is not None,
+            game.get("epic_price") is not None
+        ])
+    merged_games.sort(key=price_count, reverse=True)
 
     query = request.args.get("q", "").strip().lower()
     if query:
         merged_games = [g for g in merged_games if query in g['name'].lower()]
 
-    # Pagination logic  # Make sure this import is at the top of your file
+    # Pagination logic
     page = int(request.args.get("page", 1))
-    per_page = 100
+    per_page = 10
     total = len(merged_games)
     pages = (total + per_page - 1) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     paginated_games = merged_games[start:end]
 
+    # Sliding window pagination variables
+    max_pages_to_show = 8
+    window_start = ((page - 1) // max_pages_to_show) * max_pages_to_show + 1
+    window_end = window_start + max_pages_to_show - 1
+
     return render_template(
         "index.html",
         merged_games=paginated_games,
         page=page,
         pages=pages,
-        query=query
+        query=query,
+        max_pages_to_show=max_pages_to_show,
+        window_start=window_start,
+        window_end=window_end
     )
 if __name__ == "__main__":
     app.run(debug=True)
