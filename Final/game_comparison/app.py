@@ -1,5 +1,15 @@
 from flask import Flask, render_template, request
 import xml.etree.ElementTree as ET
+import subprocess
+import os
+
+def run_spider(spider_name, output_file):
+    if os.path.exists(output_file):
+        os.remove(output_file)
+    # Remove -t xml, let Scrapy infer from file extension
+    subprocess.run([
+        "scrapy", "crawl", spider_name, "-O", output_file
+    ])
 
 def load_games_from_xml(xml_path):
     tree = ET.parse(xml_path)
